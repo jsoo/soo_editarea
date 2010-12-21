@@ -1,10 +1,10 @@
 <?php
 
 $plugin['name'] = 'soo_editarea';
-$plugin['version'] = '0.1.0';
+$plugin['version'] = '0.1.1';
 $plugin['author'] = 'Jeff Soo';
 $plugin['author_uri'] = 'http://ipsedixit.net/txp/';
-$plugin['description'] = 'Implement EditArea for admin-side code highlighting';
+$plugin['description'] = 'Integrate the EditArea admin-side code editor';
 $plugin['type'] = 3; // admin-side only
 
 defined('PLUGIN_HAS_PREFS') or define('PLUGIN_HAS_PREFS', 0x0001); 
@@ -158,6 +158,7 @@ h2. Contents
 
 * "Overview":#overview
 * "Installation":#installation
+* "Configuration options":#configuration
 * "Txp tag highlighting":#txp_highlighting
 * "History":#history
 
@@ -167,27 +168,58 @@ h1. soo_editarea
 
 h2(#overview). Overview
 
-Add "EditArea":http://www.cdolivet.com/index.php?page=editArea code highlighting to Txp admin textareas. Inspired by the atb_editarea plugin.
+"EditArea":http://www.cdolivet.com/index.php?page=editArea is a JavaScript-based code editor for browser textareas. Features include:
+
+* Code highlighting
+* Browser tab-key override for proper tabbing in the textarea
+* Full-screen mode
+* Find & replace w/ regex support
+* Multiple undo/redo
+
+*soo_editarea* provides easy integration of EditArea into Textpattern. (Well, pretty easy: there are a few steps involved.)
+
+h3. Features:
+
+* Pref setting for syntax language, allowing custom syntax file 
+* Pref setting for script path, making it easier to share one EditArea installation across multiple sites
+* Txp syntax file available separately
+
+_Suggested by the (apparently defunct) "atb_editarea":http://forum.textpattern.com/viewtopic.php?id=33915 plugin, and "discussion":http://forum.textpattern.com/viewtopic.php?id=21370 on the Txp forum._
 
 h2(#installation). Installation
 
-"Install the plugin":http://textbook.textpattern.net/wiki/index.php?title=Plugins#Downloading_.26_installing_plugins in the usual way. 
+"Install and activate the plugin":http://textbook.textpattern.net/wiki/index.php?title=Plugins#Downloading_.26_installing_plugins in the usual way.
 
-The plugin does not contain the actual EditArea files; you must install those separately. "Download EditArea":http://sourceforge.net/projects/editarea/files/ and place the @edit_area@ directory in a server-accessible location of your choice. 
+"Download EditArea":http://sourceforge.net/projects/editarea/files/ and place the @edit_area@ directory in a server-accessible location of your choice. (The default is @/textpattern/edit_area@, but you can change this in the plugin's Options settings.)
 
-If you put it somewhere other than at the root level of your @/textpattern@ directory, you will need to tell the plugin where to find it. The recommended way is to install "soo_plugin_pref":http://ipsedixit.net/txp/92/soo_plugin_pref ( %(required)requires% Txp version 4.2.0 or greater), then set this value in the "plugin options":http://textbook.textpattern.net/wiki/index.php?title=Plugins#Panel_layout_.26_controls. (Alternatively, you could edit the plugin code directly.)
+Optionally, download the "txp.js syntax file":http://ipsedixit.net/file_download/16/txp.js (or "create your own":http://www.cdolivet.com/editarea/editarea/docs/customization_syntax.html) and place it in @edit_area/reg_syntax@.
+
+h2(#configuration). Configuration options
+
+The first two steps in Installation, above, are all you need to get EditArea working with standard HTML syntax highlighting for Pages and Forms, and CSS highlighting for Styles.
+
+To activate the Txp syntax file (from step 3, above), or to use a different location for the EditArea files, install and activate the "soo_plugin_pref":http://ipsedixit.net/txp/92/soo_plugin_pref plugin (Txp 4.2.0 or greater %(required)required%). Then, in the "main plugin panel":http://textbook.textpattern.net/wiki/index.php?title=Plugins, click the Options link for *soo_editarea* (look in the *Manage* column at right). 
+
+To use the Txp syntax file, change the *Page Template and Form syntax* setting to "txp".
+
+The *EditArea directory* setting is the URL (relative to @/textpattern/index.php@) of the EditArea files. (Hint: for sharing one set of EditArea files across multiple sites, put the files in any server-accessible location you choose, then add a symbolic link to each site's @/textpattern@ directory.)
 
 h2(#txp_highlighting). Txp tag highlighting
 
-By default the plugin uses EditArea's HTML highlighting for Page Template and Form editing, giving Txp tags the same highlight color as HTML tags. To have Txp tags appear in a different color, add a new syntax file at @edit_area/reg_syntax/@. (Whenever you upgrade the EditArea files you will have to remember to preserve this file.) Then change the *soo_editarea* option for Page Template & Form syntax (the installation instructions tell you how to set plugin options).
+By default the plugin uses EditArea's HTML highlighting for Page Template and Form editing, giving Txp tags the same highlight color as HTML tags. To have Txp tags appear in a different color, follow the installation/configuration instructions above for adding the txp.js file. (If you later upgrade the EditArea files you will have to remember to preserve this file.)
 
-You can "download a txp.js syntax file":http://ipsedixit.net/file_download/16/txp.js from the "author's website":http://ipsedixit.net/txp.
+The txp.js file linked above highlights Txp tags in a lovely orange color. To change it (or any of the other colors), edit txp.js to suit (look toward the bottom of the file). If you'd prefer a soothing green for your Txp tags, uncomment the line near the bottom labeled "green", and comment the line above it labeled "orange" (i.e., remove the two slashes at the start of the "green" line, and add two slashes to the start of the "orange" line).
 
-h2(#history). History
+h2(#history). Version History
 
-h3. Version 0.1.0 (2010/12/20)
+h3. 0.1.1 (2010/12/20)
 
-* Initial release.
+* Documentation update _[thanks to Marc C. for the suggestions]_
+
+h3. 0.1.0 (2010/12/20)
+
+* Initial release
+* EditArea integration for Txp's Page Template, Form, and CSS editors
 
 </div>
 # --- END PLUGIN HELP ---
