@@ -1,7 +1,7 @@
 <?php
 
 $plugin['name'] = 'soo_editarea';
-$plugin['version'] = '0.1.1';
+$plugin['version'] = '0.1.2';
 $plugin['author'] = 'Jeff Soo';
 $plugin['author_uri'] = 'http://ipsedixit.net/txp/';
 $plugin['description'] = 'Integrate the EditArea admin-side code editor';
@@ -63,6 +63,26 @@ function soo_editarea_defaults( $vals_only = false )
 			'html'	=>	'text_input',
 			'text'	=>	'EditArea directory',
 		),
+		'language'	=>	array(
+			'val'	=>	'en',
+			'html'	=>	'text_input',
+			'text'	=>	'Language',
+		),
+		'font_size'	=>	array(
+			'val'	=>	10,
+			'html'	=>	'text_input',
+			'text'	=>	'Font size',
+		),
+		'font_family'	=>	array(
+			'val'	=>	'monospace',
+			'html'	=>	'text_input',
+			'text'	=>	'Font family',
+		),
+		'replace_tab_by_spaces'	=>	array(
+			'val'	=>	0,
+			'html'	=>	'text_input',
+			'text'	=>	'Convert tab to spaces',
+		),
 	);
 	if ( $vals_only )
 		foreach ( $defaults as $name => $arr )
@@ -73,14 +93,18 @@ function soo_editarea_defaults( $vals_only = false )
 function soo_editarea( $event, $step )
 {
 	global $soo_editarea;
+	if ( $soo_editarea['replace_tab_by_spaces'] == 0 )
+		unset($soo_editarea['replace_tab_by_spaces']);
+	extract($soo_editarea);
+	
 	$vars = array(
 		'page' => array(
 			'id' => 'html',
-			'syntax' => $soo_editarea['page_form_lang'],
+			'syntax' => $page_form_lang,
 		),
 		'form' => array(
 			'id' => 'form',
-			'syntax' => $soo_editarea['page_form_lang'],
+			'syntax' => $page_form_lang,
 		),
 		'css' => array(
 			'id' => 'css',
@@ -93,19 +117,21 @@ editAreaLoader.init({
 	id : "$id"
 	,syntax: "$syntax"
 	,start_highlight: true
-});
-
 EOT;
+	array_shift($soo_editarea);
+	array_shift($soo_editarea);
+	foreach ( array_keys($soo_editarea) as $k )
+		$init .= n . t . ",$k: " . ( is_numeric($$k) ? $$k : '"' . $$k . '"' );
+	$init .= n . '});';
 	
 	echo 
 		'<script type="application/javascript" src="',
-		$soo_editarea['editarea_dir'],
+		$editarea_dir,
 		'/edit_area_full.js"></script>',
 		n,
 		script_js($init),
 		n
 	;
-	
 }
 
 # --- END PLUGIN CODE ---
@@ -178,13 +204,15 @@ h2(#overview). Overview
 
 *soo_editarea* provides easy integration of EditArea into Textpattern. (Well, pretty easy: there are a few steps involved.)
 
+_Suggested by the (apparently defunct) "atb_editarea":http://forum.textpattern.com/viewtopic.php?id=33915 plugin, and "discussion":http://forum.textpattern.com/viewtopic.php?id=21370 on the Txp forum._
+
 h3. Features:
 
-* Pref setting for syntax language, allowing custom syntax file 
-* Pref setting for script path, making it easier to share one EditArea installation across multiple sites
-* Txp syntax file available separately
+You can set plugin preferences for:
 
-_Suggested by the (apparently defunct) "atb_editarea":http://forum.textpattern.com/viewtopic.php?id=33915 plugin, and "discussion":http://forum.textpattern.com/viewtopic.php?id=21370 on the Txp forum._
+* Syntax language for Page & Form editing, allowing custom syntax file 
+* Source path, making it easier to share one EditArea installation across multiple sites
+* Various EditArea options (tooltip language, font size & family, &c.)
 
 h2(#installation). Installation
 
@@ -204,6 +232,14 @@ To use the Txp syntax file, change the *Page Template and Form syntax* setting t
 
 The *EditArea directory* setting is the URL (relative to @/textpattern/index.php@) of the EditArea files. (Hint: for sharing one set of EditArea files across multiple sites, put the files in any server-accessible location you choose, then add a symbolic link to each site's @/textpattern@ directory.)
 
+h3. More options:
+
+* *Language:* for EditArea tooltips. Use the two-letter code corresponding to the file in @edit_area/langs@.
+* *Font size:* default font size for the editor
+* *Font family:* comma-separated list of font names (%(default)default% "monospace").
+* *Convert tab to spaces:* convert tabs to this many spaces (leave at 0 for standard tabs)
+
+
 h2(#txp_highlighting). Txp tag highlighting
 
 By default the plugin uses EditArea's HTML highlighting for Page Template and Form editing, giving Txp tags the same highlight color as HTML tags. To have Txp tags appear in a different color, follow the installation/configuration instructions above for adding the txp.js file. (If you later upgrade the EditArea files you will have to remember to preserve this file.)
@@ -211,6 +247,10 @@ By default the plugin uses EditArea's HTML highlighting for Page Template and Fo
 The txp.js file linked above highlights Txp tags in a lovely orange color. To change it (or any of the other colors), edit txp.js to suit (look toward the bottom of the file). If you'd prefer a soothing green for your Txp tags, uncomment the line near the bottom labeled "green", and comment the line above it labeled "orange" (i.e., remove the two slashes at the start of the "green" line, and add two slashes to the start of the "orange" line).
 
 h2(#history). Version History
+
+h3. 0.1.2 (2010/12/20)
+
+* Added preference settings for several EditArea options
 
 h3. 0.1.1 (2010/12/20)
 
