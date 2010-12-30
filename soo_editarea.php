@@ -1,7 +1,7 @@
 <?php
 
 $plugin['name'] = 'soo_editarea';
-$plugin['version'] = '0.1.2';
+$plugin['version'] = '0.1.3';
 $plugin['author'] = 'Jeff Soo';
 $plugin['author_uri'] = 'http://ipsedixit.net/txp/';
 $plugin['description'] = 'Integrate the EditArea admin-side code editor';
@@ -21,25 +21,20 @@ if ( @txpinterface == 'admin' )
 
 	add_privs('plugin_prefs.soo_editarea','1,2');
 	add_privs('plugin_lifecycle.soo_editarea','1,2');
-	register_callback('soo_editarea_prefs', 'plugin_prefs.soo_editarea');
-	register_callback('soo_editarea_prefs', 'plugin_lifecycle.soo_editarea');
+	register_callback('soo_editarea_manage_prefs', 'plugin_prefs.soo_editarea');
+	register_callback('soo_editarea_manage_prefs', 'plugin_lifecycle.soo_editarea');
 
 	// Only activate plugin when needed
 	if ( in_array(gps('event'), array('page', 'form', 'css')) )
-	{
 		register_callback('soo_editarea', 'admin_side', 'head_end');
-		global $soo_editarea;
-		$soo_editarea = function_exists('soo_plugin_pref_vals') ? 
-			array_merge(soo_editarea_defaults(true), soo_plugin_pref_vals('soo_editarea')) 
-			: soo_editarea_defaults(true);
-	}
 }
 
-
-function soo_editarea_prefs( $event, $step )
+function soo_editarea_manage_prefs( $event, $step )
 {
 	if ( function_exists('soo_plugin_pref') )
-		return soo_plugin_pref($event, $step, soo_editarea_defaults());
+		return soo_plugin_pref($event, $step, soo_editarea_pref_spec());
+	
+		// message to install soo_plugin_pref
 	if ( substr($event, 0, 12) == 'plugin_prefs' ) {
 		$plugin = substr($event, 13);
 		$message = '<p><br /><strong>' . gTxt('edit') . " $plugin " .
@@ -50,13 +45,13 @@ function soo_editarea_prefs( $event, $step )
 	}
 }
 
-function soo_editarea_defaults( $vals_only = false )
+function soo_editarea_pref_spec( )
 {
-	$defaults = array(
-		'page_form_lang'	=>	array(
-			'val'	=>	'html',
-			'html'	=>	'text_input',
-			'text'	=>	'Page Template and Form syntax',
+	return array(
+		'page_form_lang' => array(
+			'val'	=> 'html',
+			'html'	=> 'text_input',
+			'text'	=> 'Page Template and Form syntax',
 		),
 		'editarea_dir'	=>	array(
 			'val'	=>	'edit_area',
@@ -84,15 +79,24 @@ function soo_editarea_defaults( $vals_only = false )
 			'text'	=>	'Convert tab to spaces',
 		),
 	);
-	if ( $vals_only )
-		foreach ( $defaults as $name => $arr )
-			$defaults[$name] = $arr['val'];
-	return $defaults;
+}
+
+function soo_editarea_prefs( )
+{
+	static $prefs;
+	if ( ! $prefs )
+	{
+		foreach ( soo_editarea_pref_spec() as $name => $spec )
+			$prefs[$name] = $spec['val'];
+		if ( function_exists('soo_plugin_pref_vals') )
+			$prefs = array_merge($prefs, soo_plugin_pref_vals('soo_editarea'));
+	}
+	return $prefs;
 }
 
 function soo_editarea( $event, $step )
 {
-	global $soo_editarea;
+	$soo_editarea = soo_editarea_prefs();
 	if ( $soo_editarea['replace_tab_by_spaces'] == 0 )
 		unset($soo_editarea['replace_tab_by_spaces']);
 	extract($soo_editarea);
@@ -247,6 +251,8 @@ By default the plugin uses EditArea's HTML highlighting for Page Template and Fo
 The txp.js file linked above highlights Txp tags in a lovely orange color. To change it (or any of the other colors), edit txp.js to suit (look toward the bottom of the file). If you'd prefer a soothing green for your Txp tags, uncomment the line near the bottom labeled "green", and comment the line above it labeled "orange" (i.e., remove the two slashes at the start of the "green" line, and add two slashes to the start of the "orange" line).
 
 h2(#history). Version History
+
+h3. 0.1.3 (unreleased)
 
 h3. 0.1.2 (2010/12/20)
 
