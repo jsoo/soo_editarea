@@ -124,7 +124,7 @@ function soo_editarea( )
 	$func .= n . '});';
 	
 	echo 
-		'<script type="application/javascript" src="',
+		'<script type="text/javascript" src="',
 		$editarea_dir,
 		'/edit_area_full.js"></script>', 
 		n, script_js($func), n
