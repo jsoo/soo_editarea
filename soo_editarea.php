@@ -183,6 +183,7 @@ h2. Contents
 * "Installation":#installation
 * "Configuration options":#configuration
 * "Txp tag highlighting":#txp_highlighting
+* "Known issues":#issues
 * "History":#history
 
  </div>
@@ -243,9 +244,16 @@ By default the plugin uses EditArea's HTML highlighting for Page Template and Fo
 
 The txp.js file linked above highlights Txp tags in a lovely orange color. To change it (or any of the other colors), edit txp.js to suit (look toward the bottom of the file). If you'd prefer a soothing green for your Txp tags, uncomment the line near the bottom labeled "green", and comment the line above it labeled "orange" (i.e., remove the two slashes at the start of the "green" line, and add two slashes to the start of the "orange" line).
 
+h2(#issues). Known issues
+
+EditArea, as of version 0.8.2, has problems with some versions of Safari -- phantom text creating a blurred effect. See the "soo_editarea support topic":http://forum.textpattern.com/viewtopic.php?id=35143 for possible solutions. Or check EditArea's "issue tracker":http://sourceforge.net/tracker/?group_id=164008.
+
 h2(#history). Version History
 
-h3. 0.1.3 (unreleased)
+h3. 0.1.3 (2010/12/30)
+
+* Fixed bug with Internet Explorer (@type@ attribute in @script@ tag)
+* General code cleaning
 
 h3. 0.1.2 (2010/12/20)
 
