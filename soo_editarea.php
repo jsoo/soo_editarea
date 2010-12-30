@@ -115,6 +115,8 @@ function soo_editarea( )
 		),
 	);
 	$init = array_merge($textarea[gps('event')], $init);	
+// 	if ( substr(gps('name'), -3) == '.js' )
+// 		$init['syntax'] = 'js';
 
 	$func = 'editAreaLoader.init({' . n . t . 'start_highlight: true';
 	foreach ( $init as $k => $v ) if ( $v )
