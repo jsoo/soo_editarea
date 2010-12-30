@@ -53,30 +53,30 @@ function soo_editarea_pref_spec( )
 			'html'	=> 'text_input',
 			'text'	=> 'Page Template and Form syntax',
 		),
-		'editarea_dir'	=>	array(
-			'val'	=>	'edit_area',
-			'html'	=>	'text_input',
-			'text'	=>	'EditArea directory',
+		'editarea_dir' => array(
+			'val'	=> 'edit_area',
+			'html'	=> 'text_input',
+			'text'	=> 'EditArea directory',
 		),
-		'language'	=>	array(
-			'val'	=>	'en',
-			'html'	=>	'text_input',
-			'text'	=>	'Language',
+		'language' => array(
+			'val'	=> 'en',
+			'html'	=> 'text_input',
+			'text'	=> 'Language',
 		),
-		'font_size'	=>	array(
-			'val'	=>	10,
-			'html'	=>	'text_input',
-			'text'	=>	'Font size',
+		'font_size' => array(
+			'val'	=> 10,
+			'html'	=> 'text_input',
+			'text'	=> 'Font size',
 		),
-		'font_family'	=>	array(
-			'val'	=>	'monospace',
-			'html'	=>	'text_input',
-			'text'	=>	'Font family',
+		'font_family' => array(
+			'val'	=> 'monospace',
+			'html'	=> 'text_input',
+			'text'	=> 'Font family',
 		),
-		'replace_tab_by_spaces'	=>	array(
-			'val'	=>	0,
-			'html'	=>	'text_input',
-			'text'	=>	'Convert tab to spaces',
+		'replace_tab_by_spaces' => array(
+			'val'	=> 0,
+			'html'	=> 'text_input',
+			'text'	=> 'Convert tab to spaces',
 		),
 	);
 }
@@ -94,14 +94,13 @@ function soo_editarea_prefs( )
 	return $prefs;
 }
 
-function soo_editarea( $event, $step )
+function soo_editarea( )
 {
-	$soo_editarea = soo_editarea_prefs();
-	if ( $soo_editarea['replace_tab_by_spaces'] == 0 )
-		unset($soo_editarea['replace_tab_by_spaces']);
-	extract($soo_editarea);
-	
-	$vars = array(
+	$prefs = soo_editarea_prefs();
+	extract($prefs);
+	$exclude_from_init = array_flip(array('page_form_lang', 'editarea_dir'));
+	$init = array_diff_key($prefs, $exclude_from_init);
+	$textarea = array(
 		'page' => array(
 			'id' => 'html',
 			'syntax' => $page_form_lang,
@@ -115,26 +114,18 @@ function soo_editarea( $event, $step )
 			'syntax' => 'css',
 		),
 	);
-	extract($vars[gps('event')]);	// validated in plugin init
-	$init = <<<EOT
-editAreaLoader.init({
-	id : "$id"
-	,syntax: "$syntax"
-	,start_highlight: true
-EOT;
-	array_shift($soo_editarea);
-	array_shift($soo_editarea);
-	foreach ( array_keys($soo_editarea) as $k )
-		$init .= n . t . ",$k: " . ( is_numeric($$k) ? $$k : '"' . $$k . '"' );
-	$init .= n . '});';
+	$init = array_merge($textarea[gps('event')], $init);	
+
+	$func = 'editAreaLoader.init({' . n . t . 'start_highlight: true';
+	foreach ( $init as $k => $v ) if ( $v )
+		$func .= n.t . ",$k: " . ( is_numeric($v) ? $v : "\"$v\"" );
+	$func .= n . '});';
 	
 	echo 
 		'<script type="application/javascript" src="',
 		$editarea_dir,
-		'/edit_area_full.js"></script>',
-		n,
-		script_js($init),
-		n
+		'/edit_area_full.js"></script>', 
+		n, script_js($func), n
 	;
 }
 
