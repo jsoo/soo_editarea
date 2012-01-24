@@ -1,7 +1,7 @@
 <?php
 
 $plugin['name'] = 'soo_editarea';
-$plugin['version'] = '0.1.3';
+$plugin['version'] = '0.1.4';
 $plugin['author'] = 'Jeff Soo';
 $plugin['author_uri'] = 'http://ipsedixit.net/txp/';
 $plugin['description'] = 'Integrate the EditArea admin-side code editor';
@@ -62,6 +62,16 @@ function soo_editarea_pref_spec( )
 			'val'	=> 'en',
 			'html'	=> 'text_input',
 			'text'	=> 'Language',
+		),
+		'min_height' => array(
+			'val'	=> 500,
+			'html'	=> 'text_input',
+			'text'	=> 'Editor height',
+		),
+		'min_width' => array(
+			'val'	=> 400,
+			'html'	=> 'text_input',
+			'text'	=> 'Editor width',
 		),
 		'font_size' => array(
 			'val'	=> 10,
@@ -214,7 +224,7 @@ You can set plugin preferences for:
 
 h2(#installation). Installation
 
-"Install and activate the plugin":http://textbook.textpattern.net/wiki/index.php?title=Plugins#Downloading_.26_installing_plugins in the usual way.
+"Install and activate the plugin":http://textpattern.net/wiki/index.php?title=Plugins#Downloading_.26_installing_plugins in the usual way.
 
 "Download EditArea":http://sourceforge.net/projects/editarea/files/ and place the @edit_area@ directory in a server-accessible location of your choice. (The default is @/textpattern/edit_area@, but you can change this in the plugin's Options settings.)
 
@@ -224,7 +234,7 @@ h2(#configuration). Configuration options
 
 The first two steps in Installation, above, are all you need to get EditArea working with standard HTML syntax highlighting for Pages and Forms, and CSS highlighting for Styles.
 
-To activate the Txp syntax file (from step 3, above), or to use a different location for the EditArea files, install and activate the "soo_plugin_pref":http://ipsedixit.net/txp/92/soo_plugin_pref plugin (Txp 4.2.0 or greater %(required)required%). Then, in the "main plugin panel":http://textbook.textpattern.net/wiki/index.php?title=Plugins, click the Options link for *soo_editarea* (look in the *Manage* column at right). 
+To activate the Txp syntax file (from step 3, above), or to use a different location for the EditArea files, install and activate the "soo_plugin_pref":http://ipsedixit.net/txp/92/soo_plugin_pref plugin (Txp 4.2.0 or greater %(required)required%). Then, in the "main plugin panel":http://textpattern.net/wiki/index.php?title=Plugins, click the Options link for *soo_editarea* (look in the *Manage* column at right). 
 
 To use the Txp syntax file, change the *Page Template and Form syntax* setting to "txp".
 
@@ -235,6 +245,8 @@ h3. More options:
 * *Language:* for EditArea tooltips. Use the two-letter code corresponding to the file in @edit_area/langs@.
 * *Font size:* default font size for the editor
 * *Font family:* comma-separated list of font names (%(default)default% "monospace").
+* *Editor height:* default height of the EditArea textarea
+* *Editor width:* as above, for width
 * *Convert tab to spaces:* convert tabs to this many spaces (leave at 0 for standard tabs)
 
 
@@ -249,6 +261,10 @@ h2(#issues). Known issues
 EditArea, as of version 0.8.2, has problems with some versions of Safari -- phantom text creating a blurred effect. See the "soo_editarea support topic":http://forum.textpattern.com/viewtopic.php?id=35143 for possible solutions. Or check EditArea's "issue tracker":http://sourceforge.net/tracker/?group_id=164008.
 
 h2(#history). Version History
+
+h3. 0.1.4 (2011/04/27)
+
+* Added default height/width prefs (as requested by mrdale)
 
 h3. 0.1.3 (2010/12/30)
 
