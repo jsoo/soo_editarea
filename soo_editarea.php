@@ -1,7 +1,7 @@
 <?php
 
 $plugin['name'] = 'soo_editarea';
-$plugin['version'] = '0.1.4';
+$plugin['version'] = '0.1.5';
 $plugin['author'] = 'Jeff Soo';
 $plugin['author_uri'] = 'http://ipsedixit.net/txp/';
 $plugin['description'] = 'Integrate the EditArea admin-side code editor';
@@ -87,6 +87,11 @@ function soo_editarea_pref_spec( )
 			'val'	=> 0,
 			'html'	=> 'text_input',
 			'text'	=> 'Convert tab to spaces',
+		),
+		'plugins' => array(
+			'val'	=> '',
+			'html'	=> 'text_input',
+			'text'	=> 'EditArea plugins (comma-separated)',
 		),
 	);
 }
@@ -248,7 +253,7 @@ h3. More options:
 * *Editor height:* default height of the EditArea textarea
 * *Editor width:* as above, for width
 * *Convert tab to spaces:* convert tabs to this many spaces (leave at 0 for standard tabs)
-
+* *EditArea Plugins:* comma-separated list of EditArea plugins (e.g. "zencoding":http://code.google.com/p/zen-coding/). It's up to you to install any such plugins appropriately.
 
 h2(#txp_highlighting). Txp tag highlighting
 
@@ -261,6 +266,10 @@ h2(#issues). Known issues
 EditArea, as of version 0.8.2, has problems with some versions of Safari -- phantom text creating a blurred effect. See the "soo_editarea support topic":http://forum.textpattern.com/viewtopic.php?id=35143 for possible solutions. Or check EditArea's "issue tracker":http://sourceforge.net/tracker/?group_id=164008.
 
 h2(#history). Version History
+
+h3. 0.1.5 (2012/01/24)
+
+* Added pref for EditArea plugins (as requested by mrdale)
 
 h3. 0.1.4 (2011/04/27)
 
