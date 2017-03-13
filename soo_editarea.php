@@ -1,17 +1,21 @@
 <?php
 
-$plugin['name'] = 'soo_editarea';
 $plugin['version'] = '0.1.5';
 $plugin['author'] = 'Jeff Soo';
 $plugin['author_uri'] = 'http://ipsedixit.net/txp/';
 $plugin['description'] = 'Integrate the EditArea admin-side code editor';
 $plugin['type'] = 3; // admin-side only
+$plugin['allow_html_help'] = 1;
 
 defined('PLUGIN_HAS_PREFS') or define('PLUGIN_HAS_PREFS', 0x0001); 
 defined('PLUGIN_LIFECYCLE_NOTIFY') or define('PLUGIN_LIFECYCLE_NOTIFY', 0x0002); 
 $plugin['flags'] = PLUGIN_HAS_PREFS | PLUGIN_LIFECYCLE_NOTIFY;
 
-defined('txpinterface') or @include_once('zem_tpl.php');
+if (! defined('txpinterface')) {
+    global $compiler_cfg;
+    @include_once('config.php');
+    @include_once($compiler_cfg['path']);
+}
 
 # --- BEGIN PLUGIN CODE ---
 
@@ -150,156 +154,5 @@ function soo_editarea()
 }
 
 # --- END PLUGIN CODE ---
-
-if (0) {
-?>
-<!-- CSS SECTION
-# --- BEGIN PLUGIN CSS ---
-<style type="text/css">
-div#sed_help pre {padding: 0.5em 1em; background: #eee; border: 1px dashed #ccc;}
-div#sed_help h1, div#sed_help h2, div#sed_help h3, div#sed_help h3 code {font-family: sans-serif; font-weight: bold;}
-div#sed_help h1, div#sed_help h2, div#sed_help h3 {margin-left: -1em;}
-div#sed_help h2, div#sed_help h3 {margin-top: 2em;}
-div#sed_help h1 {font-size: 2.4em;}
-div#sed_help h2 {font-size: 1.8em;}
-div#sed_help h3 {font-size: 1.4em;}
-div#sed_help h4 {font-size: 1.2em;}
-div#sed_help h5 {font-size: 1em;margin-left:1em;font-style:oblique;}
-div#sed_help h6 {font-size: 1em;margin-left:2em;font-style:oblique;}
-div#sed_help li {list-style-type: disc;}
-div#sed_help li li {list-style-type: circle;}
-div#sed_help li li li {list-style-type: square;}
-div#sed_help li a code {font-weight: normal;}
-div#sed_help li code:first-child {background: #ddd;padding:0 .3em;margin-left:-.3em;}
-div#sed_help li li code:first-child {background:none;padding:0;margin-left:0;}
-div#sed_help dfn {font-weight:bold;font-style:oblique;}
-div#sed_help .required, div#sed_help .warning {color:red;}
-div#sed_help .default {color:green;}
-div#sed_help kbd {
-    font-family: Verdana, Arial, sans-serif;
-    font-size: 11px;
-    color: #000;
-    line-height: 11px;
-    height: 17px;
-    background: #eee;
-    border: solid #aaa;
-    border-width: 1px 0 0 1px;
-    padding: -1px 1px;  
-}
-</style>
-# --- END PLUGIN CSS ---
--->
-<!-- HELP SECTION
-# --- BEGIN PLUGIN HELP ---
-<div id="sed_help">
-
- <div id="toc">
-
-h2. Contents
-
-* "Overview":#overview
-* "Installation":#installation
-* "Configuration options":#configuration
-* "Txp tag highlighting":#txp_highlighting
-* "Known issues":#issues
-* "History":#history
-
- </div>
-
-h1. soo_editarea
-
-h2(#overview). Overview
-
-"EditArea":http://www.cdolivet.com/index.php?page=editArea is a JavaScript-based code editor for browser textareas. Features include:
-
-* Code highlighting
-* Browser tab-key override for proper tabbing in the textarea
-* Full-screen mode
-* Find & replace w/ regex support
-* Multiple undo/redo
-
-*soo_editarea* provides easy integration of EditArea into Textpattern. (Well, pretty easy: there are a few steps involved.)
-
-_Suggested by the (apparently defunct) "atb_editarea":http://forum.textpattern.com/viewtopic.php?id=33915 plugin, and "discussion":http://forum.textpattern.com/viewtopic.php?id=21370 on the Txp forum._
-
-h3. Features:
-
-You can set plugin preferences for:
-
-* Syntax language for Page & Form editing, allowing custom syntax file 
-* Source path, making it easier to share one EditArea installation across multiple sites
-* Various EditArea options (tooltip language, font size & family, &c.)
-
-h2(#installation). Installation
-
-"Install and activate the plugin":http://textpattern.net/wiki/index.php?title=Plugins#Downloading_.26_installing_plugins in the usual way.
-
-"Download EditArea":http://sourceforge.net/projects/editarea/files/ and place the @edit_area@ directory in a server-accessible location of your choice. (The default is @/textpattern/edit_area@, but you can change this in the plugin's Options settings.)
-
-Optionally, download the "txp.js syntax file":http://ipsedixit.net/file_download/16/txp.js (or "create your own":http://www.cdolivet.com/editarea/editarea/docs/customization_syntax.html) and place it in @edit_area/reg_syntax@.
-
-h2(#configuration). Configuration options
-
-The first two steps in Installation, above, are all you need to get EditArea working with standard HTML syntax highlighting for Pages and Forms, and CSS highlighting for Styles.
-
-To activate the Txp syntax file (from step 3, above), or to use a different location for the EditArea files, install and activate the "soo_plugin_pref":http://ipsedixit.net/txp/92/soo_plugin_pref plugin (Txp 4.2.0 or greater %(required)required%). Then, in the "main plugin panel":http://textpattern.net/wiki/index.php?title=Plugins, click the Options link for *soo_editarea* (look in the *Manage* column at right). 
-
-To use the Txp syntax file, change the *Page Template and Form syntax* setting to "txp".
-
-The *EditArea directory* setting is the URL (relative to @/textpattern/index.php@) of the EditArea files. (Hint: for sharing one set of EditArea files across multiple sites, put the files in any server-accessible location you choose, then add a symbolic link to each site's @/textpattern@ directory.)
-
-h3. More options:
-
-* *Language:* for EditArea tooltips. Use the two-letter code corresponding to the file in @edit_area/langs@.
-* *Font size:* default font size for the editor
-* *Font family:* comma-separated list of font names (%(default)default% "monospace").
-* *Editor height:* default height of the EditArea textarea
-* *Editor width:* as above, for width
-* *Convert tab to spaces:* convert tabs to this many spaces (leave at 0 for standard tabs)
-* *EditArea Plugins:* comma-separated list of EditArea plugins (e.g. "zencoding":http://code.google.com/p/zen-coding/). It's up to you to install any such plugins appropriately.
-
-h2(#txp_highlighting). Txp tag highlighting
-
-By default the plugin uses EditArea's HTML highlighting for Page Template and Form editing, giving Txp tags the same highlight color as HTML tags. To have Txp tags appear in a different color, follow the installation/configuration instructions above for adding the txp.js file. (If you later upgrade the EditArea files you will have to remember to preserve this file.)
-
-The txp.js file linked above highlights Txp tags in a lovely orange color. To change it (or any of the other colors), edit txp.js to suit (look toward the bottom of the file). If you'd prefer a soothing green for your Txp tags, uncomment the line near the bottom labeled "green", and comment the line above it labeled "orange" (i.e., remove the two slashes at the start of the "green" line, and add two slashes to the start of the "orange" line).
-
-h2(#issues). Known issues
-
-EditArea, as of version 0.8.2, has problems with some versions of Safari -- phantom text creating a blurred effect. See the "soo_editarea support topic":http://forum.textpattern.com/viewtopic.php?id=35143 for possible solutions. Or check EditArea's "issue tracker":http://sourceforge.net/tracker/?group_id=164008.
-
-h2(#history). Version History
-
-h3. 0.1.5 (2012/01/24)
-
-* Added pref for EditArea plugins (as requested by mrdale)
-
-h3. 0.1.4 (2011/04/27)
-
-* Added default height/width prefs (as requested by mrdale)
-
-h3. 0.1.3 (2010/12/30)
-
-* Fixed bug with Internet Explorer (@type@ attribute in @script@ tag)
-* General code cleaning
-
-h3. 0.1.2 (2010/12/20)
-
-* Added preference settings for several EditArea options
-
-h3. 0.1.1 (2010/12/20)
-
-* Documentation update _[thanks to Marc C. for the suggestions]_
-
-h3. 0.1.0 (2010/12/20)
-
-* Initial release
-* EditArea integration for Txp's Page Template, Form, and CSS editors
-
-</div>
-# --- END PLUGIN HELP ---
--->
-<?php
-}
 
 ?>
