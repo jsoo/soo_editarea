@@ -2,7 +2,7 @@ h1. soo_editarea
 
 This is a plugin for "Textpattern":http://textpattern.com.
 
-* "Support forum topic":http://forum.textpattern.com/viewtopic.php?id=35143
+* "Support forum topic":http://forum.textpattern.io/viewtopic.php?id=35143
 * "Author site":http://ipsedixit.net/txp/124/soo_editarea
 * "GitHub":https://github.com/jsoo/soo_editarea
 
